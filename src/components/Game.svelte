@@ -7,7 +7,6 @@
 	import { getContext, onMount, setContext } from "svelte";
 	import Settings from "./settings";
 	import {
-		Share,
 		Seperator,
 		Tutorial,
 		Statistics,
@@ -189,20 +188,12 @@
 </Modal>
 
 <Modal bind:visible={showStats}>
-	{#if modeData.modes[$mode].historical}
-		<h2 class="historical">Statistics not available for historical games</h2>
-	{:else}
-		<Statistics data={stats} />
-		<Distribution distribution={stats.guesses} {game} />
-	{/if}
-	<Seperator visible={!game.active}>
-		<Timer
-			slot="1"
-			bind:this={timer}
-			on:reload={reload}
-		/>
-		<Share slot="2" state={game} />
-	</Seperator>
+	<Statistics data={stats} />
+	<Distribution distribution={stats.guesses} {game} />
+	<Timer
+		bind:this={timer}
+		on:reload={reload}
+	/>
 </Modal>
 
 <Modal fullscreen={true} bind:visible={showSettings}>
