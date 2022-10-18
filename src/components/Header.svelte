@@ -64,7 +64,6 @@
 		left: 50%;
 		transform: translateX(-50%);
 		font-size: var(--fs-large);
-		cursor: pointer;
 		text-align: center;
 	}
 </style>
