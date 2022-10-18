@@ -10,21 +10,21 @@
 
 	let ms = 1000;
 
-	// let countDown: number;
-	//
-	// export function reset(m: GameMode) {
-	// 	clearInterval(countDown);
-	// 	ms = timeRemaining(modeData.modes[m]);
-	// 	if (ms < 0) dispatch("timeup");
-	// 	countDown = setInterval(() => {
-	// 		ms = timeRemaining(modeData.modes[m]);
-	// 		if (ms < 0) {
-	// 			clearInterval(countDown);
-	// 			dispatch("timeup");
-	// 		}
-	// 	}, MS.SECOND);
-	// }
-	// $: reset($mode);
+	let countDown: number;
+
+	export function reset(m: GameMode) {
+		clearInterval(countDown);
+		ms = timeRemaining(modeData.modes[m]);
+		if (ms < 0) dispatch("timeup");
+		countDown = setInterval(() => {
+			ms = timeRemaining(modeData.modes[m]);
+			if (ms < 0) {
+				clearInterval(countDown);
+				dispatch("timeup");
+			}
+		}, MS.SECOND);
+	}
+	$: reset($mode);
 </script>
 
 <h3>Next wordle</h3>
