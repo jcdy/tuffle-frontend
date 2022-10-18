@@ -65,16 +65,4 @@
 		padding: 10px;
 		position: relative;
 	}
-	svg {
-		position: absolute;
-		z-index: -1;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		width: min(130%, 100vw);
-		max-height: 100%;
-	}
-	path {
-		stroke: var(--bg-secondary);
-	}
 </style>

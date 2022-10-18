@@ -55,7 +55,7 @@
 		// than the number of columns, and reports to the user if there are
 		// not enough letters in their guess.
 		if (game.board.words[game.guesses].length !== COLS) {
-			toaster.pop("Not enough letters!!!!!!!!!");
+			toaster.pop("Not enough letters");
 			board.shake(game.guesses);
 		} else if (words.contains(game.board.words[game.guesses])) {
 		  // `words.contains` accesses a dictionary of all valid words.
@@ -87,19 +87,17 @@
 			DELAY_INCREMENT * COLS + DELAY_INCREMENT
 		);
 		setTimeout(setShowStatsTrue, delay * 1.4);
-		if (!modeData.modes[$mode].historical) {
-			++stats.guesses[game.guesses];
-			++stats.played;
-			if ("streak" in stats) {
-				stats.streak =
-					modeData.modes[$mode].seed - stats.lastGame > modeData.modes[$mode].unit
-						? 1
-						: stats.streak + 1;
-				if (stats.streak > stats.maxStreak) stats.maxStreak = stats.streak;
-			}
-			stats.lastGame = modeData.modes[$mode].seed;
-			localStorage.setItem(`stats-${$mode}`, JSON.stringify(stats));
+		++stats.guesses[game.guesses];
+		++stats.played;
+		if ("streak" in stats) {
+			stats.streak =
+				modeData.modes[$mode].seed - stats.lastGame > modeData.modes[$mode].unit
+					? 1
+					: stats.streak + 1;
+			if (stats.streak > stats.maxStreak) stats.maxStreak = stats.streak;
 		}
+		stats.lastGame = modeData.modes[$mode].seed;
+		localStorage.setItem(`stats-${$mode}`, JSON.stringify(stats));
 	}
 
 	function lose() {
@@ -107,13 +105,11 @@
 		toaster.pop("The tuffle was: " + word, 2);
 		game.active = false;
 		setTimeout(setShowStatsTrue, delay);
-		if (!modeData.modes[$mode].historical) {
-			++stats.guesses.fail;
-			++stats.played;
-			if ("streak" in stats) stats.streak = 0;
-			stats.lastGame = modeData.modes[$mode].seed;
-			localStorage.setItem(`stats-${$mode}`, JSON.stringify(stats));
-		}
+		++stats.guesses.fail;
+		++stats.played;
+		if ("streak" in stats) stats.streak = 0;
+		stats.lastGame = modeData.modes[$mode].seed;
+		localStorage.setItem(`stats-${$mode}`, JSON.stringify(stats));
 	}
 
 	function concede() {
@@ -210,11 +206,5 @@
 		max-width: var(--game-width);
 		margin: auto;
 		position: relative;
-	}
-	.historical {
-		text-align: center;
-		margin-top: 10px;
-		padding: 0 20px;
-		text-transform: uppercase;
 	}
 </style>
