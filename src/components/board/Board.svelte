@@ -8,7 +8,6 @@
 	export let value: string[];
 	export let board: GameBoard;
 	export let guesses: number;
-	export let icon: string;
 	export function shake(row: number) {
 		rows[row].shake();
 	}
@@ -53,11 +52,6 @@
 			on:ctx={(e) => context(e.detail.x, e.detail.y, i, value[i])}
 		/>
 	{/each}
-	{#if icon}
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-			<path d={icon} stroke-width="14" />
-		</svg>
-	{/if}
 </div>
 
 <style>
