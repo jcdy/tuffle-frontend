@@ -29,10 +29,9 @@
 	}
 
 	function enterPressed() {
-		// return dispatch("submitWord");
-		dispatch("submitWord");
 		checkGuess()
 			.then((sr) => $server_response = sr);
+		dispatch("submitWord");
 	}
 
 	function handleKeystroke(e: KeyboardEvent) {

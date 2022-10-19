@@ -26,7 +26,7 @@ export async function wordleKeyPressed(key: string)
 	// 	letterColors: "BBBBBBBBBBBBBBBBBBBBBBGYDB",
 	// 	showInvalidGuessAnimation:false,
 	// }
-  console.log("wordleKeyPressed server response 1: ", data);
+  // console.log("wordleKeyPressed server response 1: ", data);
 
 	let sr = {
 		guessedWords: data['guessedWords'],
@@ -35,51 +35,18 @@ export async function wordleKeyPressed(key: string)
 		showInvalidGuessAnimation:false,
     guessCount: 4,
 	};
-
-	console.log("wordleKeyPressed server response 2: ", sr);
-  console.log("wordleKeyPressed cleaned: ", cleanResponse(sr));
+  //
+	// console.log("wordleKeyPressed server response 2: ", sr);
+  // console.log("wordleKeyPressed cleaned: ", cleanResponse(sr));
 	return cleanResponse(sr);
 }
 
 export async function checkGuess(): Promise<ServerResponse> {
-  // `game.guesses` is the number of guesses the user has submitted.
-  // This checks if the word at index game.guesses has less letters
-  // than the number of columns, and reports to the user if there are
-  // not enough letters in their guess.
-  // toaster.pop("Not enough letters");
-  // if (game.board.words[game.guesses].length !== COLS) {
-  //
-  //   board.shake(game.guesses);
-  // } else if (words.contains(game.board.words[game.guesses])) {
-  //   // `words.contains` accesses a dictionary of all valid words.
-  //   const state = getState(word, game.board.words[game.guesses]);
-  //   game.board.state[game.guesses] = state;
-  //   state.forEach((e, i) => {
-  //     const ls = $letterStates[game.board.words[game.guesses][i]];
-  //     if (ls === "🔳" || e === "🟩") {
-  //       $letterStates[game.board.words[game.guesses][i]] = e;
-  //     }
-  //   });
-  //   ++game.guesses;
-  //   if (game.board.words[game.guesses - 1] === word) {
-  //     win();
-  //   } else if (game.guesses === ROWS) {
-  //     lose();
-  //   }
-  // } else {
-  //   toaster.pop("Not in word list");
-  //   board.shake(game.guesses);
-  // }
-
-  // BELOW IS ORIGINAL
-
-	console.log("checkGuess");
-
 	const response = await fetch(
 		'https://wordlebackend-1.amajc.repl.co/enter_pressed');
 	const data = await response.json();
 
-  console.log("checkGuess server response 1: ", data);
+  console.log("checkGuess enter pressed");
 
 	let sr = {
 		guessedWords: data['guessedWords'],
@@ -89,15 +56,13 @@ export async function checkGuess(): Promise<ServerResponse> {
     guessCount: 4,
 	};
 
-	console.log("checkGuess server response 2: ", sr);
+	// console.log("checkGuess server response 2: ", sr);
   console.log("checkGuess cleaned: ", cleanResponse(sr));
 	return cleanResponse(sr);
 }
 
 export async function deleteKeyPressed()
 	: Promise<ServerResponse> {
-
-	console.log("Delete Key Pressed");
 
 	// const response = await fetch(
 	// 	'http://localhost:18080/delete_pressed');
@@ -136,7 +101,6 @@ function cleanResponse(server_response: ServerResponse)
 		boardColors: cleanedColors,
 		letterColors: cleanedLetterColors,
 		showInvalidGuessAnimation: false,
-    guessCount: 4,
 	};
 
 	return cleaned_server_response;
@@ -151,6 +115,7 @@ export function emptyResponse(): ServerResponse {
 	}
 }
 
+// Returns a 2D array representing the letter colors.
 export function boardStateFromServerResponse(
 	server_response: ServerResponse): LetterState[][] {
 	let boardColors = server_response["boardColors"];

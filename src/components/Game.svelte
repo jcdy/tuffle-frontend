@@ -68,33 +68,23 @@
 	let timer: Timer;
 
 	function submitWord() {
-		console.log(game.board.guessCount);
-	  // `game.guesses` is the number of guesses the user has submitted.
-		// This checks if the word at index game.guesses has less letters
-		// than the number of columns, and reports to the user if there are
-		// not enough letters in their guess.
-		if (game.board.words[game.guesses].length !== COLS) {
-			toaster.pop("Not enough letters");
-			board.shake(game.guesses);
-		} else if (words.contains(game.board.words[game.guesses])) {
-		  // `words.contains` accesses a dictionary of all valid words.
-			const state = getState(word, game.board.words[game.guesses]);
-			game.board.state[game.guesses] = state;
-			state.forEach((e, i) => {
-				const ls = $letterStates[game.board.words[game.guesses][i]];
-				if (ls === "🔳" || e === "🟩") {
-					$letterStates[game.board.words[game.guesses][i]] = e;
-				}
-			});
+		// The server should handle the following errors:
+		//    1. The guess did not have enough letters.
+		//    2. The guess was not a valid word.
+		if ($server_response["errorMessage"]) {
+			toaster.pop($server_response["errorMessage"]);
+			board.shake(game.board.guessCount);
+		} else {
+			// If it's not an error, then the guess was valid. Increment game.guesses
+			// so the Tuffle frontend will flip the colors of the guess.
 			++game.guesses;
-			if (game.board.words[game.guesses - 1] === word) {
+			console.log(word);
+			if ($server_response["gameWon"]) {
 				win();
 			} else if (game.guesses === ROWS) {
 				lose();
 			}
-		} else {
-			toaster.pop("Not in word list");
-			board.shake(game.guesses);
+
 		}
 	}
 
