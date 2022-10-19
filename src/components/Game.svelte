@@ -28,7 +28,18 @@
 		createLetterStates,
 		words,
 	} from "../utils";
-	import { letterStates, settings, mode } from "../stores";
+	import {
+		letterStates,
+		settings,
+		mode,
+		server_response
+	} from "../stores";
+	import type { ServerResponse } from "../server_mocks";
+	import {
+		emptyResponse,
+		boardStateFromServerResponse,
+		letterStateFromServerResponse,
+	} from "../server_mocks";
 
 	export let word: string;
 	export let stats: Stats;
@@ -37,6 +48,13 @@
 
 	setContext("toaster", toaster);
 	const version = getContext<string>("version");
+
+	$: $server_response, game.board = {
+		words: $server_response["guessedWords"],
+		state: boardStateFromServerResponse($server_response),
+		guessCount: $server_response["guessCount"],
+	};
+	$: $server_response, $letterStates = letterStateFromServerResponse($server_response);
 
 	// implement transition delay on keys
 	const delay = DELAY_INCREMENT * ROWS + 800;
@@ -50,6 +68,7 @@
 	let timer: Timer;
 
 	function submitWord() {
+		console.log(game.board.guessCount);
 	  // `game.guesses` is the number of guesses the user has submitted.
 		// This checks if the word at index game.guesses has less letters
 		// than the number of columns, and reports to the user if there are
@@ -152,7 +171,7 @@
 	/>
 	<Board
 		bind:this={board}
-		bind:value={game.board.words}
+		bind:value={$server_response["guessedWords"]}
 		tutorial={$settings.tutorial === 1}
 		on:closeTutPopUp|once={() => ($settings.tutorial = 0)}
 		board={game.board}
@@ -194,6 +213,9 @@
 
 <Modal fullscreen={true} bind:visible={showSettings}>
 	<Settings state={game} />
+	{#if game.active}
+		<div class="concede" on:click={concede}>give up</div>
+	{/if}
 </Modal>
 
 <style lang="scss">
@@ -206,5 +228,20 @@
 		max-width: var(--game-width);
 		margin: auto;
 		position: relative;
+	}
+	.concede {
+		margin-top: 15px;
+		text-transform: uppercase;
+		color: #fff;
+		cursor: pointer;
+		font-size: var(--fs-medium);
+		font-weight: bold;
+		padding: 15px;
+		border-radius: 4px;
+		text-align: center;
+		background-color: var(--red);
+		&:hover {
+			opacity: 0.9;
+		}
 	}
 </style>

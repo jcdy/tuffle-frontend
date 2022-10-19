@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { createEventDispatcher, onDestroy } from "svelte/internal";
-	import { letterStates, mode } from "../../stores";
+	import { letterStates, mode, server_response } from "../../stores";
 	import { COLS, keys } from "../../utils";
 	import Key from "./Key.svelte";
+	import type { ServerResponse } from "../../server_mocks";
+	import {
+		wordleKeyPressed,
+		checkGuess,
+		deleteKeyPressed,
+	} from "../../server_mocks";
 
 	export let value = "";
 	export let disabled = false;
@@ -11,16 +17,24 @@
 	const dispatch = createEventDispatcher();
 
 	function appendValue(char: string) {
-		if (!disabled && value.length < COLS) {
-			dispatch("keystroke", char);
-			value += char;
-		}
+		dispatch("keystroke", char);
+		// value += char;
+		wordleKeyPressed(char)
+			.then((sr) => $server_response = sr);
 	}
+
 	function backspaceValue() {
-		if (!disabled) {
-			value = value.slice(0, value.length - 1);
-		}
+		deleteKeyPressed()
+			.then((sr) => $server_response = sr);
 	}
+
+	function enterPressed() {
+		// return dispatch("submitWord");
+		dispatch("submitWord");
+		checkGuess()
+			.then((sr) => $server_response = sr);
+	}
+
 	function handleKeystroke(e: KeyboardEvent) {
 		if (!disabled && !e.ctrlKey && !e.altKey) {
 			if (e.key && /^[a-z]$/.test(e.key.toLowerCase())) {
@@ -28,7 +42,7 @@
 			}
 			if (e.key === "Backspace") return backspaceValue();
 
-			if (e.key === "Enter") return dispatch("submitWord");
+			if (e.key === "Enter") return enterPressed();
 		}
 		if (e.key === "Escape") dispatch("esc");
 	}
@@ -63,7 +77,7 @@
 		{/each}
 	</div>
 	<div class="row">
-		<Key letter="ENTER" on:keystroke={() => !disabled && dispatch("submitWord")} />
+		<Key letter="ENTER" on:keystroke={enterPressed} />
 		{#each keys[2] as letter}
 			<Key
 				{letter}
