@@ -39,6 +39,7 @@
 		emptyResponse,
 		boardStateFromServerResponse,
 		letterStateFromServerResponse,
+		newGame,
 	} from "../server_mocks";
 
 	export let word: string;
@@ -71,17 +72,20 @@
 		// The server should handle the following errors:
 		//    1. The guess did not have enough letters.
 		//    2. The guess was not a valid word.
+		console.log("submitWord");
+		console.log(Date.now());
+		console.log($server_response);
 		if ($server_response["errorMessage"]) {
 			toaster.pop($server_response["errorMessage"]);
-			board.shake(game.board.guessCount);
+			board.shake(game.guesses);
 		} else {
 			// If it's not an error, then the guess was valid. Increment game.guesses
 			// so the Tuffle frontend will flip the colors of the guess.
 			++game.guesses;
 			console.log(word);
-			if ($server_response["gameWon"]) {
+			if ($server_response["gameStatus"] == "win") {
 				win();
-			} else if (game.guesses === ROWS) {
+			} else if ($server_response["gameStatus"] == "lose") {
 				lose();
 			}
 
@@ -111,7 +115,7 @@
 
 	function lose() {
 		// Display the tuffle if the player fails to guess it.
-		toaster.pop("The tuffle was: " + word, 2);
+		toaster.pop("The tuffle was: " + $server_response["answer"], 2);
 		game.active = false;
 		setTimeout(setShowStatsTrue, delay);
 		++stats.guesses.fail;
@@ -130,6 +134,9 @@
 	function reload() {
 		modeData.modes[$mode].historical = false;
 		modeData.modes[$mode].seed = newSeed($mode);
+		// newGame();
+		newGame()
+			.then((sr) => $server_response = sr);
 		game = createNewGame($mode);
 		word = words.words[seededRandomInt(0, words.words.length, modeData.modes[$mode].seed)];
 		$letterStates = createLetterStates();

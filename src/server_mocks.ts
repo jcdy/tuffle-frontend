@@ -28,37 +28,29 @@ export async function wordleKeyPressed(key: string)
 	// }
   // console.log("wordleKeyPressed server response 1: ", data);
 
-	let sr = {
-		guessedWords: data['guessedWords'],
-		boardColors: data['boardColors'],
-		letterColors: data['letterColors'],
-		showInvalidGuessAnimation:false,
-    guessCount: 4,
-	};
+	// let sr = {
+	// 	guessedWords: data['guessedWords'],
+	// 	boardColors: data['boardColors'],
+	// 	letterColors: data['letterColors'],
+	// 	showInvalidGuessAnimation:false,
+  //   guessCount: 4,
+	// };
   //
 	// console.log("wordleKeyPressed server response 2: ", sr);
   // console.log("wordleKeyPressed cleaned: ", cleanResponse(sr));
-	return cleanResponse(sr);
+	return cleanResponse(data);
 }
 
 export async function checkGuess(): Promise<ServerResponse> {
+  console.log("checkGuess enter pressed");
 	const response = await fetch(
 		'https://wordlebackend-1.amajc.repl.co/enter_pressed');
 	const data = await response.json();
 
-  console.log("checkGuess enter pressed");
-
-	let sr = {
-		guessedWords: data['guessedWords'],
-		boardColors: data['boardColors'],
-		letterColors: data['letterColors'],
-		showInvalidGuessAnimation:false,
-    guessCount: 4,
-	};
 
 	// console.log("checkGuess server response 2: ", sr);
-  console.log("checkGuess cleaned: ", cleanResponse(sr));
-	return cleanResponse(sr);
+  // console.log("checkGuess cleaned: ", cleanResponse(sr));
+	return cleanResponse(data);
 }
 
 export async function deleteKeyPressed()
@@ -70,21 +62,37 @@ export async function deleteKeyPressed()
 		'https://wordlebackend-1.amajc.repl.co/delete_pressed');
 	const data = await response.json();
 
-	let sr = {
-		guessedWords: data['guessedWords'],
-		boardColors: data['boardColors'],
-		letterColors: data['letterColors'],
-		showInvalidGuessAnimation:false,
-    guessCount: 4,
-	};
+	// let sr = {
+	// 	guessedWords: data['guessedWords'],
+	// 	boardColors: data['boardColors'],
+	// 	letterColors: data['letterColors'],
+	// 	showInvalidGuessAnimation:false,
+  //   guessCount: 4,
+	// };
 
-	return cleanResponse(sr);
+	return cleanResponse(data);
 }
 
-function cleanResponse(server_response: ServerResponse)
-	: ServerResponse {
+export async function newGame()
+	: Promise<ServerResponse> {
+  const response = await fetch(
+		'https://wordlebackend-1.amajc.repl.co/new_game');
+	const data = await response.json();
+	return cleanResponse(data);
+}
 
-	let cleanedGuesses = server_response.guessedWords.concat(
+function cleanResponse(data)
+	: ServerResponse {
+  let server_response = {
+    answer: data["answer"],
+    boardColors: data['boardColors'],
+		guessedWords: data['guessedWords'],
+		letterColors: data['letterColors'],
+    gameStatus: data["gameStatus"],
+    errorMessage: data["errorMessage"],
+	};
+
+  let cleanedGuesses = server_response.guessedWords.concat(
 		Array(ROWS - server_response.guessedWords.length)
 		.fill(""));
 
@@ -95,14 +103,16 @@ function cleanResponse(server_response: ServerResponse)
 	let cleanedLetterColors = (server_response.letterColors
 		+ "BBBBBBBBBBBBBBBBBBBBBBBBBB").substring(0, 26);
 
-
 	let cleaned_server_response = {
+    answer: data["answer"],
+    boardColors: cleanedColors,
 		guessedWords: cleanedGuesses,
-		boardColors: cleanedColors,
 		letterColors: cleanedLetterColors,
-		showInvalidGuessAnimation: false,
+    gameStatus: data["gameStatus"],
+    errorMessage: data["errorMessage"],
 	};
-
+  console.log(Date.now());
+  console.log(cleaned_server_response);
 	return cleaned_server_response;
 }
 

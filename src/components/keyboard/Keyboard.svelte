@@ -29,10 +29,19 @@
 	}
 
 	function enterPressed() {
+		// let sr = checkGuess();
+		// checkGuess()
+		// 	.then((sr) => $server_response = sr)
+		// 	.then(dispatch("submitWord"));
 		checkGuess()
-			.then((sr) => $server_response = sr);
-		dispatch("submitWord");
+			.then((sr) => {
+				$server_response = sr;
+				dispatch("submitWord");
+			})
 	}
+
+
+
 
 	function handleKeystroke(e: KeyboardEvent) {
 		if (!disabled && !e.ctrlKey && !e.altKey) {
