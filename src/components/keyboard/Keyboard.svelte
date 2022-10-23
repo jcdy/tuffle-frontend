@@ -8,7 +8,7 @@
 		wordleKeyPressed,
 		checkGuess,
 		deleteKeyPressed,
-	} from "../../server_mocks";
+	} from "../../server_api";
 
 	export let disabled = false;
 	let preventChange = true;

@@ -40,7 +40,7 @@
 		boardStateFromServerResponse,
 		letterStateFromServerResponse,
 		newGame,
-	} from "../server_mocks";
+	} from "../server_api";
 
 	export let word: string;
 	export let stats: Stats;
