@@ -31,7 +31,6 @@
 		? GameMode[hash[0]]
 		: parseInt(localStorage.getItem("mode")) || modeData.default;
 	mode.set(modeVal);
-	// If this is a link to a specific word make sure that that is the word
 	if (!isNaN(parseInt(hash[1])) && parseInt(hash[1]) < getWordNumber(modeVal)) {
 		modeData.modes[modeVal].seed =
 			(parseInt(hash[1]) - 1) * modeData.modes[modeVal].unit + modeData.modes[modeVal].start;
@@ -39,7 +38,6 @@
 	}
 	mode.subscribe((m) => {
 		localStorage.setItem("mode", `${m}`);
-		window.location.hash = GameMode[m];
 		stats = (JSON.parse(localStorage.getItem(`stats-${m}`)) as Stats) || createDefaultStats(m);
 		word = words.words[seededRandomInt(0, words.words.length, modeData.modes[m].seed)];
 		let temp: GameState;
