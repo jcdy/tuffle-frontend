@@ -11,14 +11,11 @@
 		words,
 	} from "./utils";
 	import Game from "./components/Game.svelte";
+	import BackendURLModal from "./components/BackendURLModal.svelte";
 	import { letterStates, settings, mode } from "./stores";
 	import { GameMode } from "./enums";
 	import { Toaster } from "./components/widgets";
 	import { setContext } from "svelte";
-
-	export let version: string;
-	setContext("version", version);
-	localStorage.setItem("version", version);
 
 	let stats: Stats;
 	let word: string;
@@ -97,3 +94,4 @@
 {#if toaster}
 	<Game {stats} {word} {toaster} bind:game={state} />
 {/if}
+<BackendURLModal />

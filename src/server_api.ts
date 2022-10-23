@@ -1,6 +1,12 @@
 import { ROWS, COLS, createLetterStates } from "./utils";
 
-import { BACKEND_URL } from "../config";
+let backendURL = "";
+
+// setBackendURL sets the backend URL for the server API. It is exported for
+// stores.ts to modify. This avoids a circular dependency.
+export function setBackendURL(url: string) {
+	backendURL = url;
+}
 
 export type ServerResponse = {
   guessedWords: Array<string>,
@@ -10,23 +16,20 @@ export type ServerResponse = {
 
 export async function wordleKeyPressed(key: string)
   : Promise<ServerResponse> {
-  const response = await fetch(
-    `${BACKEND_URL}/wordle_key_pressed/` + key);
+  const response = await fetch(`${backendURL}/wordle_key_pressed/` + key);
   const data = await response.json();
   return cleanResponse(data);
 }
 
 export async function checkGuess(): Promise<ServerResponse> {
-  const response = await fetch(
-    `${BACKEND_URL}/enter_pressed`);
+  const response = await fetch(`${backendURL}/enter_pressed`);
   const data = await response.json();
   return cleanResponse(data);
 }
 
 export async function deleteKeyPressed()
   : Promise<ServerResponse> {
-  const response = await fetch(
-    `${BACKEND_URL}/delete_pressed`);
+  const response = await fetch(`${backendURL}/delete_pressed`);
   const data = await response.json();
 
   return cleanResponse(data);
@@ -34,8 +37,7 @@ export async function deleteKeyPressed()
 
 export async function newGame()
   : Promise<ServerResponse> {
-  const response = await fetch(
-    `${BACKEND_URL}/new_game`);
+  const response = await fetch(`${backendURL}/new_game`);
   const data = await response.json();
   return cleanResponse(data);
 }
