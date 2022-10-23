@@ -22520,7 +22520,7 @@ var app = (function () {
     var main = new App({
         target: document.body,
         props: {
-            version: "1.3.2",
+            version: "1.0",
         }
     });
 
