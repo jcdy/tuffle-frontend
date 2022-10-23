@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getRowData, words } from "../../utils";
+	import { getRowData } from "../../utils";
 
 	import Row from "./Row.svelte";
 	import { createEventDispatcher } from "svelte";
@@ -35,8 +35,8 @@
 			word = guesses > num ? val : "";
 
 			const match = getRowData(num, board);
-			pAns = words.words.filter((w) => match(w)).length;
-			pSols = pAns + words.valid.filter((w) => match(w)).length;
+			// pAns = words.words.filter((w) => match(w)).length;
+			// pSols = pAns + words.valid.filter((w) => match(w)).length;
 		}
 	}
 </script>

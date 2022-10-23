@@ -8,7 +8,6 @@
 		createLetterStates,
 		ROWS,
 		getWordNumber,
-		words,
 	} from "./utils";
 	import Game from "./components/Game.svelte";
 	import BackendURLModal from "./components/BackendURLModal.svelte";
@@ -39,7 +38,7 @@
 	mode.subscribe((m) => {
 		localStorage.setItem("mode", `${m}`);
 		stats = (JSON.parse(localStorage.getItem(`stats-${m}`)) as Stats) || createDefaultStats(m);
-		word = words.words[seededRandomInt(0, words.words.length, modeData.modes[m].seed)];
+		word = "tuffy";
 		let temp: GameState;
 		if (modeData.modes[m].historical === true) {
 			temp = JSON.parse(localStorage.getItem(`state-${m}-h`));

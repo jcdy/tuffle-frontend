@@ -26,7 +26,6 @@
 		createNewGame,
 		seededRandomInt,
 		createLetterStates,
-		words,
 	} from "../utils";
 	import {
 		letterStates,
@@ -42,7 +41,6 @@
 		newGame,
 	} from "../server_api";
 
-	export let word: string;
 	export let stats: Stats;
 	export let game: GameState;
 	export let toaster: Toaster;
@@ -72,9 +70,6 @@
 		// The server should handle the following errors:
 		//    1. The guess did not have enough letters.
 		//    2. The guess was not a valid word.
-		console.log("submitWord");
-		console.log(Date.now());
-		console.log($server_response);
 		if ($server_response["errorMessage"]) {
 			toaster.pop($server_response["errorMessage"]);
 			board.shake(game.guesses);
@@ -82,7 +77,6 @@
 			// If it's not an error, then the guess was valid. Increment game.guesses
 			// so the Tuffle frontend will flip the colors of the guess.
 			++game.guesses;
-			console.log(word);
 			if ($server_response["gameStatus"] == "win") {
 				win();
 			} else if ($server_response["gameStatus"] == "lose") {
@@ -102,13 +96,6 @@
 		setTimeout(setShowStatsTrue, delay * 1.4);
 		++stats.guesses[game.guesses];
 		++stats.played;
-		if ("streak" in stats) {
-			stats.streak =
-				modeData.modes[$mode].seed - stats.lastGame > modeData.modes[$mode].unit
-					? 1
-					: stats.streak + 1;
-			if (stats.streak > stats.maxStreak) stats.maxStreak = stats.streak;
-		}
 		stats.lastGame = modeData.modes[$mode].seed;
 		localStorage.setItem(`stats-${$mode}`, JSON.stringify(stats));
 	}
@@ -120,7 +107,6 @@
 		setTimeout(setShowStatsTrue, delay);
 		++stats.guesses.fail;
 		++stats.played;
-		if ("streak" in stats) stats.streak = 0;
 		stats.lastGame = modeData.modes[$mode].seed;
 		localStorage.setItem(`stats-${$mode}`, JSON.stringify(stats));
 	}
@@ -132,14 +118,10 @@
 	}
 
 	function reload() {
-		modeData.modes[$mode].historical = false;
-		modeData.modes[$mode].seed = newSeed($mode);
-		// newGame();
 		newGame()
 			.then((sr) => $server_response = sr);
 		game = createNewGame($mode);
-		word = words.words[seededRandomInt(0, words.words.length, modeData.modes[$mode].seed)];
-		$letterStates = createLetterStates();
+		// $letterStates = createLetterStates();
 		showStats = false;
 		showRefresh = false;
 		timer.reset($mode);
@@ -152,7 +134,6 @@
 	onMount(() => {
 		if (!game.active) setTimeout(setShowStatsTrue, delay);
 	});
-	// $: toaster.pop(word);
 </script>
 
 <main class:guesses={game.guesses !== 0} style="--rows: {ROWS}; --cols: {COLS}">
