@@ -2,9 +2,9 @@
 	import Modal from './Modal.svelte';
 	import { onDestroy } from 'svelte';
 	import { backendURL } from "../stores";
+  import { BACKEND_URL as defaultURL } from "../../config";
 	import { get } from "svelte/store";
 
-	const defaultURL = "https://wordlebackend-1.amajc.repl.co";
 	let url = defaultURL;
 
 	let isLocalStorage = false;

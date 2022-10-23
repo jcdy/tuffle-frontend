@@ -2,8 +2,8 @@
 import App from "./App.svelte";
 
 export default new App({
-	target: document.body,
-	props: {
-		version: "1.3.2",
-	}
+  target: document.body,
+  props: {
+    version: "1.0",
+  }
 });
