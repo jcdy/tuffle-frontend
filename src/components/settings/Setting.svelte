@@ -1,20 +1,9 @@
-<script lang="ts">
-	import Switch from "./Switch.svelte";
-	export let value: any;
-	export let type: SettingType;
-	export let options: (string | number)[] = [];
-	export let disabled = false;
-	const types = {
-		switch: Switch,
-	};
-</script>
-
 <div class="setting">
 	<div>
 		<div class="title"><slot name="title" /></div>
 		<div class="desc"><slot name="desc" /></div>
 	</div>
-	<svelte:component this={types[type]} bind:value {options} {disabled} />
+	<slot name="value" />
 </div>
 
 <style>
@@ -31,5 +20,11 @@
 	.desc {
 		font-size: var(--fs-tiny);
 		color: var(--fg-secondary);
+	}
+	.setting :global([slot="value"]) {
+		min-height: 56px;
+		padding: 12px 0;
+		display: flex;
+		align-items: center;
 	}
 </style>
