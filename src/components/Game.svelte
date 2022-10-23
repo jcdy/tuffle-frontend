@@ -34,7 +34,7 @@
 		mode,
 		server_response
 	} from "../stores";
-	import type { ServerResponse } from "../server_mocks";
+	import type { ServerResponse } from "../server_api";
 	import {
 		emptyResponse,
 		boardStateFromServerResponse,

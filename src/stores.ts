@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import type { GameMode } from "./enums";
 import { createDefaultSettings, createLetterStates } from "./utils";
-import { emptyResponse } from "./server_mocks";
+import { emptyResponse } from "./server_api";
 
 export const mode = writable<GameMode>();
 

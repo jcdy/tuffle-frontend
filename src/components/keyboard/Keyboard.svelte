@@ -3,14 +3,13 @@
 	import { letterStates, mode, server_response } from "../../stores";
 	import { COLS, keys } from "../../utils";
 	import Key from "./Key.svelte";
-	import type { ServerResponse } from "../../server_mocks";
+	import type { ServerResponse } from "../../server_api";
 	import {
 		wordleKeyPressed,
 		checkGuess,
 		deleteKeyPressed,
 	} from "../../server_mocks";
 
-	export let value = "";
 	export let disabled = false;
 	let preventChange = true;
 
@@ -18,7 +17,6 @@
 
 	function appendValue(char: string) {
 		dispatch("keystroke", char);
-		// value += char;
 		wordleKeyPressed(char)
 			.then((sr) => $server_response = sr);
 	}
@@ -29,10 +27,6 @@
 	}
 
 	function enterPressed() {
-		// let sr = checkGuess();
-		// checkGuess()
-		// 	.then((sr) => $server_response = sr)
-		// 	.then(dispatch("submitWord"));
 		checkGuess()
 			.then((sr) => {
 				$server_response = sr;
