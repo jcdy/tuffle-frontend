@@ -18,8 +18,8 @@ backendURL.subscribe(url => localStorage.setItem("backendURL", url));
 backendURL.subscribe(url => serverSetBackendURL(url)); 
 
 function getBackendURL(): string {
-	if (localStorage) {
-		return localStorage.getItem("backendURL") || config.BACKEND_URL;
-	}
-	return config.BACKEND_URL;
+  if (localStorage) {
+    return localStorage.getItem("backendURL") || config.BACKEND_URL;
+  }
+  return config.BACKEND_URL;
 }

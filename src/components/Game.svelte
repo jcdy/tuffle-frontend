@@ -38,6 +38,7 @@
 		emptyResponse,
 		boardStateFromServerResponse,
 		letterStateFromServerResponse,
+		getGame,
 		newGame,
 	} from "../server_api";
 
@@ -131,8 +132,18 @@
 		if (!game.active) showStats = true;
 	}
 
-	onMount(() => {
-		if (!game.active) setTimeout(setShowStatsTrue, delay);
+	onMount(async () => {
+		// Restore the previous game state.
+		try {
+			const currentGame = await getGame();
+			$server_response = currentGame;
+		} catch(err) {
+			console.warn("Failed to restore previous game state:", err);
+		}
+
+		if (!game.active) {
+			setTimeout(setShowStatsTrue, delay);
+		}
 	});
 </script>
 

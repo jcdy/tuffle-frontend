@@ -1,11 +1,12 @@
 import { ROWS, COLS, createLetterStates } from "./utils";
 
 let backendURL = "";
+let gameID = "";
 
 // setBackendURL sets the backend URL for the server API. It is exported for
 // stores.ts to modify. This avoids a circular dependency.
 export function setBackendURL(url: string) {
-	backendURL = url;
+  backendURL = url;
 }
 
 export type ServerResponse = {
@@ -14,32 +15,57 @@ export type ServerResponse = {
   letterColors: string,
 }
 
-export async function wordleKeyPressed(key: string)
-  : Promise<ServerResponse> {
-  const response = await fetch(`${backendURL}/wordle_key_pressed/` + key);
-  const data = await response.json();
+async function fetchAPI(path: string): Promise<ServerResponse> {
+  if (backendURL === "") {
+    throw new Error("backendURL not set");
+  }
+
+  if (sessionStorage && gameID == "") {
+    // Try and restore the game state.
+    gameID = sessionStorage.getItem("gameID");
+  }
+
+  const resp = await fetch(backendURL + path, {
+    method: "GET",
+    headers: { "X-Tuffle-Game-ID": gameID },
+  });
+  if (!resp.ok) {
+    throw new Error(`fetchAPI: ${resp.status} ${resp.statusText}`);
+  }
+
+  // Update the Tuffle game ID from the server.
+  const newGameID = resp.headers.get("X-Tuffle-Game-ID") || "";
+  if (gameID != newGameID) {
+    gameID = newGameID;
+
+    // Persist the gameID in local storage.
+    if (sessionStorage) {
+      sessionStorage.setItem("gameID", gameID)
+    };
+  }
+
+  const data = await resp.json();
   return cleanResponse(data);
+}
+
+export async function getGame(): Promise<ServerResponse> {
+  return await fetchAPI("/game");
+}
+
+export async function wordleKeyPressed(key: string): Promise<ServerResponse> {
+  return await fetchAPI(`/wordle_key_pressed/${key}`);
 }
 
 export async function checkGuess(): Promise<ServerResponse> {
-  const response = await fetch(`${backendURL}/enter_pressed`);
-  const data = await response.json();
-  return cleanResponse(data);
+  return await fetchAPI(`/enter_pressed`);
 }
 
-export async function deleteKeyPressed()
-  : Promise<ServerResponse> {
-  const response = await fetch(`${backendURL}/delete_pressed`);
-  const data = await response.json();
-
-  return cleanResponse(data);
+export async function deleteKeyPressed(): Promise<ServerResponse> {
+  return await fetchAPI(`/delete_pressed`);
 }
 
-export async function newGame()
-  : Promise<ServerResponse> {
-  const response = await fetch(`${backendURL}/new_game`);
-  const data = await response.json();
-  return cleanResponse(data);
+export async function newGame(): Promise<ServerResponse> {
+  return await fetchAPI("/new_game");
 }
 
 function cleanResponse(data)
