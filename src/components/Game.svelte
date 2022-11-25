@@ -103,7 +103,7 @@
 
 	function lose() {
 		// Display the tuffle if the player fails to guess it.
-		toaster.pop("The tuffle was: " + $server_response["answer"], 2);
+		toaster.pop("The tuffle is: " + $server_response["answer"], 2);
 		game.active = false;
 		setTimeout(setShowStatsTrue, delay);
 		++stats.guesses.fail;
